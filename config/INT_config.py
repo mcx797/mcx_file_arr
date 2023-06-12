@@ -13,4 +13,4 @@ class INTConfig(Config):
 
 if __name__ == '__main__':
     cfg = INTConfig('log_items.json')
-    cfg.set(cfg.Description, 'test test test test')
+    cfg.set(cfg.Description, 'test description of log items!')
