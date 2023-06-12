@@ -6,6 +6,7 @@ from ..common.style_sheet import StyleSheet
 
 from app.common.config import cfg
 from ..common.path import FILE_ICON_PATH
+import os
 
 
 class FileCard(QFrame):
@@ -39,28 +40,38 @@ class FileCard(QFrame):
         self.titleLabel.setObjectName('titleLabel')
         self.contentLabel.setObjectName('contentLabel')
 
-        #self.setAcceptDrops(True)
+        self.setAcceptDrops(True)
 
+    def dragEnterEvent(self, e):
+        # print(evn.minData())
+        # print(evn.minData().text())
+        # 鼠标放开函数事件
+        e.accept()
+        print('hhhh')
 
+    def dropEvent(self, e):
+        print('xixixi')
+        file_path = e.mimeData().text()
+        file_path = file_path[8:]
+        print(file_path)
+        if os.path.isdir(file_path):
+            print('okok!')
+            self.folderChangeEvent(file_path)
+        e.accept()
+
+    def folderChangeEvent(self, folder):
+        if not folder or cfg.get(self._folder) == folder:
+            return
+        cfg.set(self._folder, folder)
+        self.refreshConfig()
 
     def mouseReleaseEvent(self, e):
         super().mouseReleaseEvent(e)
         folder = QFileDialog.getExistingDirectory(
             self, self.tr('Choose folder'), cfg.get(self._folder)
         )
-        if not folder or cfg.get(self._folder) == folder:
-            return
-        cfg.set(self._folder, folder)
-        self.refreshConfig()
+        self.folderChangeEvent(folder)
 
-    def clearLayout(self, target):
-        item_list = list(range(target))
-        item_list.reverse()
-        for i in item_list:
-            item = target.itemAt(i)
-            target.removeItem(item)
-            if item.widget():
-                item.widget().deleteLater()
 
     def refreshConfig(self):
         self._parent.refreshConfig()
