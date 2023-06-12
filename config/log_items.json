@@ -1,5 +1,5 @@
 {
-    "Description": "test test test test",
+    "Description": "test description of log items!",
     "Para_list": [
         "Area",
         "Dev_department",
@@ -7,11 +7,29 @@
         "Well_type",
         "Well_name"
     ],
-    "Area": "默认地区岩气",
-    "Dev_department": "默认公司",
-    "Eva_department": "山东立鼎",
-    "Well_type": "评价井",
-    "Well_name": "默认井",
+    "Area": {
+        "type": "str",
+        "value": "默认地区岩气"
+    },
+    "Dev_department": {
+        "type": "str",
+        "value": "默认公司"
+    },
+    "Eva_department": {
+        "type": "str",
+        "value": "山东立鼎"
+    },
+    "Well_type": {
+        "type": [
+            "评价井",
+            "水平井"
+        ],
+        "value": "评价井"
+    },
+    "Well_name": {
+        "type": "str",
+        "value": "默认井"
+    },
     "items": [
         {
             "name": "ReservoirParaEvaluate_ImageHeaderMes",
