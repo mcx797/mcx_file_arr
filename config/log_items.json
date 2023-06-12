@@ -1,0 +1,38 @@
+{
+    "Description": "test test test test",
+    "Para_list": [
+        "Area",
+        "Dev_department",
+        "Eva_department",
+        "Well_type",
+        "Well_name"
+    ],
+    "Area": "默认地区岩气",
+    "Dev_department": "默认公司",
+    "Eva_department": "山东立鼎",
+    "Well_type": "评价井",
+    "Well_name": "默认井",
+    "items": [
+        {
+            "name": "ReservoirParaEvaluate_ImageHeaderMes",
+            "type_list": [
+                "txt"
+            ],
+            "out_path": "{0[0]}\\{0[1]}\\{0[2]}\\{0[3]}\\测井评价资料\\储层参数评价-储层参数评价({0[4]})\\测井曲线\\{0[5]}储层参数评价图头信息",
+            "para_list": [
+                "Area",
+                "Dev_department",
+                "Well_type",
+                "Well_name",
+                "Eva_department"
+            ]
+        },
+        {
+            "name": "ReservoirParaEvaluate_ReservoirClassification",
+            "type_list": [
+                "xls",
+                "xlsx"
+            ]
+        }
+    ]
+}
