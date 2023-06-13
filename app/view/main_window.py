@@ -14,8 +14,11 @@ from .setting_interface import SettingInterface
 from .layout_interface import LayoutInterface
 from .labeled_files_interface import LabeledFilesInterface
 from .unlabeled_files_interface import UnlabeledFilesInterface
+from utils.FileFactory import FileFactory
 
 from ..common.path import LOGO_ICON_PATH
+
+from app.common.config import cfg
 
 
 class StackedWidget(QFrame):
@@ -57,16 +60,25 @@ class MainWindow(FramelessWindow):
         self.navigationInterface = NavigationInterface(
             self, showMenuButton=True, showReturnButton=True)
 
+        self.initFile()
+
         self.settingInterface = SettingInterface(self)
         self.layoutInterface = LayoutInterface(self)
         self.labeledFilesInterface = LabeledFilesInterface(self)
-        self.unlabeledFilesInterface = UnlabeledFilesInterface(self)
+        self.unlabeledFilesInterface = UnlabeledFilesInterface(self, self.fileFactory)
 
         self.initLayout()
 
         self.initNavigation()
 
         self.initWindow()
+
+
+
+    def initFile(self):
+        root_path = cfg.get(cfg.sourceFolder)
+        print(root_path)
+        self.fileFactory = FileFactory(root_path)
 
     def initLayout(self):
         self.hBoxLayout.setSpacing(0)
@@ -122,16 +134,17 @@ class MainWindow(FramelessWindow):
         )
 
     def initWindow(self):
-        self.resize(960, 780)
-        self.setMinimumWidth(930)
+
+        self.setMinimumWidth(1330)
         self.setMinimumHeight(700)
+        self.resize(1330, 780)
         self.setWindowIcon(QIcon(LOGO_ICON_PATH))
         self.setWindowTitle('File Transfer')
         self.titleBar.setAttribute(Qt.WA_StyledBackground)
 
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
-        self.move(w // 2 - self.width() // 2, h // 2 - self.height() //2)
+        self.move(100, 50)
 
         StyleSheet.MAIN_WINDOW.apply(self)
 
@@ -149,3 +162,4 @@ class MainWindow(FramelessWindow):
     def refreshConfig(self):
         self.settingInterface.refreshConfigContent()
         self.layoutInterface.refreshConfigContent()
+        self.signal1.emit()

@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget, QFrame, QVBoxLayout, QHBoxLayout, QLabel, QFileDialog
 
 from qfluentwidgets import IconWidget, TextWrap, FlowLayout
@@ -10,13 +10,14 @@ import os
 
 
 class FileCard(QFrame):
+
     def __init__(self, parent=None, icon = None, title='文件', index = -1, folder=cfg.sourceFolder):
         super().__init__(parent=parent)
         self.index = index
         self.iconWidget = IconWidget(icon, self)
         self.titleLabel = QLabel(title, self)
         self._folder = folder
-        self._parent = parent
+        self.__parent = parent
         self.contentLabel = QLabel(TextWrap.wrap(cfg.get(self._folder), 45, False)[0], self)
         self.hBoxLayout = QHBoxLayout(self)
         self.vBoxLayout = QVBoxLayout(self)
@@ -39,15 +40,16 @@ class FileCard(QFrame):
 
         self.titleLabel.setObjectName('titleLabel')
         self.contentLabel.setObjectName('contentLabel')
-
         self.setAcceptDrops(True)
+        #self.contentLabel.deleteLater()
+        #self.contentLabel.setText('xixixi')
+
 
     def dragEnterEvent(self, e):
         # print(evn.minData())
         # print(evn.minData().text())
         # 鼠标放开函数事件
         e.accept()
-        print('hhhh')
 
     def dropEvent(self, e):
         print('xixixi')
@@ -59,28 +61,45 @@ class FileCard(QFrame):
             self.folderChangeEvent(file_path)
         e.accept()
 
-    def folderChangeEvent(self, folder):
-        if not folder or cfg.get(self._folder) == folder:
-            return
-        cfg.set(self._folder, folder)
-        self.refreshConfig()
-
     def mouseReleaseEvent(self, e):
         super().mouseReleaseEvent(e)
         folder = QFileDialog.getExistingDirectory(
             self, self.tr('Choose folder'), cfg.get(self._folder)
         )
+        #print(folder)
+        #self.contentLabel.setText(TextWrap.wrap(folder, 45, False)[0])
+        #self.repaint()
         self.folderChangeEvent(folder)
 
+    def folderChangeEvent(self, folder):
+        if not folder or cfg.get(self._folder) == folder:
+            return
+        cfg.set(self._folder, folder)
+        print(folder)
+        self.contentLabel.setText(TextWrap.wrap(folder, 45, False)[0])
+        self.repaint()
+        self.refreshConfig()
 
     def refreshConfig(self):
-        self._parent.refreshConfig()
+        self.__parent.refreshConfig()
+
+    def refreshConfigContent(self):
+        print('aaa')
+        print(TextWrap.wrap(cfg.get(self._folder), 45, False)[0])
+        self.contentLabel.setText(TextWrap.wrap(cfg.get(self._folder), 45, False)[0])
+        self.contentLabel.repaint()
+        print('aaa')
+        #self.contentLabel.repaint()
+        #self.repaint()
+        #self.contentLabel.deleteLater()
+        #self.vBoxLayout.deleteLater()
+        #self.contentLabel = QLabel(TextWrap.wrap(cfg.get(self._folder), 45, False)[0], self)
 
 class FileCardView(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self._cards = []
-        self._parent = parent
+        self.__parent = parent
         self.vBoxLayout = QVBoxLayout(self)
         self.flowLayout = FlowLayout()
         self.vBoxLayout.setContentsMargins(36, 0, 36, 0)
@@ -100,29 +119,8 @@ class FileCardView(QWidget):
         self._cards.append(card)
 
     def refreshConfig(self):
-        self._parent.refreshConfig()
-
-    def clearCards(self):
-        self.flowLayout.removeAllWidgets()
-        for item in self._cards:
-            item.deleteLater()
-        self._cards = []
+        self.__parent.refreshConfig()
 
     def refreshConfigContent(self):
-        self.clearCards()
-        self.flowLayout = FlowLayout()
-        self.flowLayout.setContentsMargins(0, 0, 0, 0)
-        self.flowLayout.setHorizontalSpacing(12)
-        self.flowLayout.setVerticalSpacing(12)
-        self.vBoxLayout.addLayout(self.flowLayout)
-        self.addFileCard(
-            icon = FILE_ICON_PATH,
-            title='源文件夹',
-            index=0,
-            folder=cfg.sourceFolder
-        )
-        self.addFileCard(
-            icon=FILE_ICON_PATH,
-            title='目标文件夹',
-            index=5,
-            folder=cfg.targetFolder)
+        self._cards[0].refreshConfigContent()
+        self._cards[1].refreshConfigContent()

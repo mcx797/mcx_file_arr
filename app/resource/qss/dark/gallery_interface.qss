@@ -16,7 +16,7 @@ ToolBar > #titleLabel {
 }
 
 ToolBar > #subtitleLabel {
-    font: 22px 'Segoe UI', 'Microsoft YaHei';
+    font: 18px 'Segoe UI', 'Microsoft YaHei';
     background-color: transparent;
     color: white;
 }

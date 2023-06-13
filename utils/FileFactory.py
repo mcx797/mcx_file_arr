@@ -5,8 +5,8 @@ from utils.FileItem import FileItem
 class FileFactory:
     """文件管理器"""
     def __init__(self, root_path):
-        self._root_path = root_path
-        self._files = []
+        self.root_path = root_path
+        self.files = []
         self.LoadFiles(root_path, [])
 
     def LoadFiles(self, path, path_list):
@@ -19,18 +19,18 @@ class FileFactory:
                 path_list.pop(len(path_list) - 1)
             else:
                 new_file = FileItem(path_list.copy(), file_name)
-                self._files.append(new_file)
+                self.files.append(new_file)
 
     def AllPath(self):
-        return self._files
+        return self.files
 
     def __str__(self):
-        ans = 'the number of the file item is ' + str(len(self._files))
-        for i in range(len(self._files)):
+        ans = 'the number of the file item is ' + str(len(self.files))
+        for i in range(len(self.files)):
             ans += '\nitem '
             ans += str(i)
             ans += '\n-----------------------------------\n'
-            ans += str(self._files[i])
+            ans += str(self.files[i])
             ans += '-------------------------------------'
         return ans
 

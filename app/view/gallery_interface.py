@@ -38,21 +38,19 @@ class ToolBar(QWidget):
         self._parent = parent
         self.titleLabel = QLabel(title, self)
         self.subtitleLabel = QLabel(subtitle, self)
-
         self.separator = SeparatorWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
-
 
         self.__initWidget()
 
     def __initWidget(self):
-        self.setFixedHeight(300)
-        self.vBoxLayout.setSpacing(20)
-        self.vBoxLayout.setContentsMargins(60, 20, 36, 20)
+        self.setFixedHeight(220)
+        self.vBoxLayout.setSpacing(5)
+        self.vBoxLayout.setContentsMargins(50, 20, 0, 0)
         self.vBoxLayout.addWidget(self.titleLabel)
-        self.vBoxLayout.addSpacing(2)
+        self.vBoxLayout.addSpacing(0)
         self.vBoxLayout.addWidget(self.subtitleLabel)
-        self.vBoxLayout.addSpacing(2)
+        self.vBoxLayout.addSpacing(10)
         self.vBoxLayout.setAlignment(Qt.AlignTop)
         fileCardView = FileCardView(self)
         self._fileCardView = fileCardView
@@ -126,7 +124,7 @@ class ExampleCard(QWidget):
         self.vBoxLayout.setSpacing(12)
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.topLayout.setContentsMargins(12, 12, 12, 12)
-        self.bottomLayout.setContentsMargins(18, 18, 18, 18)
+        self.bottomLayout.setContentsMargins(10, 10, 10, 10)
         self.cardLayout.setContentsMargins(0, 0, 0, 0)
 
         self.vBoxLayout.addWidget(self.titleLabel, 0, Qt.AlignTop)
@@ -173,7 +171,7 @@ class GalleryInterface(ScrollArea):
             parent widget
         """
         super().__init__(parent=parent)
-        self._parent = parent
+        self.__parent = parent
         self.view = QWidget(self)
         self.toolBar = ToolBar(title, subtitle, self)
         self.vBoxLayout = QVBoxLayout(self.view)
@@ -185,12 +183,12 @@ class GalleryInterface(ScrollArea):
 
         self.vBoxLayout.setSpacing(30)
         self.vBoxLayout.setAlignment(Qt.AlignTop)
-        self.vBoxLayout.setContentsMargins(36, 20, 36, 36)
+        self.vBoxLayout.setContentsMargins(36, 10, 36, 36)
         self.view.setObjectName('view')
         StyleSheet.GALLERY_INTERFACE.apply(self)
 
     def refreshConfig(self):
-        self._parent.refreshConfig()
+        self.__parent.refreshConfig()
 
     def refreshConfigContent(self):
         self.toolBar.refreshConfigContent()
