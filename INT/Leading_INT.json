@@ -1,36 +1,29 @@
 {
-    "Description": "test description of log items!",
-    "Para_list": [
-        "Area",
-        "Dev_department",
-        "Eva_department",
-        "Well_type",
-        "Well_name"
-    ],
-    "Area": {
-        "type": "str",
-        "value": "默认地区岩气"
-    },
-    "Dev_department": {
-        "type": "str",
-        "value": "默认公司"
-    },
-    "Eva_department": {
-        "type": "str",
-        "value": "山东立鼎"
-    },
-    "Well_type": {
-        "type": [
-            "评价井",
-            "水平井"
-        ],
-        "value": "评价井"
-    },
-    "Well_name": {
-        "type": "str",
-        "value": "默认井"
-    },
-    "items": [
+    "description": "log data rename INT v1!!",
+	"para": {
+		"area": {
+			"type": "str",
+			"value": "默认地区岩气"
+		},
+		"dev_department": {
+			"type": "str",
+			"value": "默认公司"
+		},
+		"eva_department": {
+			"type": "str",
+			"value": "山东立鼎"
+		},
+		"well_type": {
+			"type" : "options",
+			"list" :[ "评价井", "水平井" ],
+			"value": "评价井"
+		},
+		"well_name": {
+			"type": "str",
+			"value": "默认井"
+		}
+	},
+    "INT": [
         {
             "name": "ReservoirParaEvaluate_ImageHeaderMes",
             "type_list": [
@@ -50,7 +43,9 @@
             "type_list": [
                 "xls",
                 "xlsx"
-            ]
+            ],
+			"out_path": "",
+			"para_list": []
         }
     ]
 }

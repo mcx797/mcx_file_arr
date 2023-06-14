@@ -11,6 +11,7 @@ from ..common.style_sheet import StyleSheet
 from ..common.signal_bus import signalBus
 from ..components.file_card import FileCardView
 from ..common.config import cfg
+from app.common.signal_bus import signalBus
 
 
 class SeparatorWidget(QWidget):
@@ -53,28 +54,24 @@ class ToolBar(QWidget):
         self.vBoxLayout.addSpacing(10)
         self.vBoxLayout.setAlignment(Qt.AlignTop)
         fileCardView = FileCardView(self)
-        self._fileCardView = fileCardView
+        self.fileCardView = fileCardView
         fileCardView.addFileCard(
             icon = 'app/resource/images/icon_file/icon_file.png',
             title='源文件夹',
             index=0,
-            folder=cfg.sourceFolder
+            folder=cfg.sourceFolder,
+            signal = signalBus.sourceFolderChangedSignal
         )
         fileCardView.addFileCard(
             icon='app/resource/images/icon_file/icon_file.png',
             title='目标文件夹',
             index=5,
-            folder=cfg.targetFolder
+            folder=cfg.targetFolder,
+            signal = signalBus.targetFolderChangedSignal
         )
         self.vBoxLayout.addWidget(fileCardView)
         self.titleLabel.setObjectName('titleLabel')
         self.subtitleLabel.setObjectName('subtitleLabel')
-
-    def refreshConfig(self):
-        self._parent.refreshConfig()
-
-    def refreshConfigContent(self):
-        self._fileCardView.refreshConfigContent()
 
     def toggleTheme(self):
         theme = Theme.LIGHT if isDarkTheme() else Theme.DARK
@@ -186,12 +183,6 @@ class GalleryInterface(ScrollArea):
         self.vBoxLayout.setContentsMargins(36, 10, 36, 36)
         self.view.setObjectName('view')
         StyleSheet.GALLERY_INTERFACE.apply(self)
-
-    def refreshConfig(self):
-        self.__parent.refreshConfig()
-
-    def refreshConfigContent(self):
-        self.toolBar.refreshConfigContent()
 
     def addExampleCard(self, title, widget, sourcePath: str, stretch=0):
         card = ExampleCard(title, widget, sourcePath, stretch, self.view)

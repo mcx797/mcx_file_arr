@@ -60,4 +60,4 @@ SUPPORT_URL = "https://afdian.net/a/zhiyiYo"
 
 
 cfg = Config()
-qconfig.load('app/config/config.json', cfg)
+qconfig.load('app/mxx_config/mxx_config.json', cfg)

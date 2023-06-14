@@ -1,0 +1,17 @@
+{
+	
+	"rule_list": [
+		{
+			"target":"ReservoirParaEvaluate",
+			"rules": [
+				{
+					"type":"equal",
+					"content": "haha",
+					"start":"0",
+					"end":"0",
+					"target":"图头"
+				}
+			]
+		}
+	]
+}

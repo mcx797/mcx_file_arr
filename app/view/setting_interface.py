@@ -13,16 +13,18 @@ from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 from ..common.icon import Icon
 from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR
 from ..common.style_sheet import StyleSheet
+from app.common.signal_bus import signalBus
 
 
 class SettingInterface(ScrollArea):
     """ Setting interface """
 
     checkUpdateSig = pyqtSignal()
-    musicFoldersChanged = pyqtSignal(list)
     acrylicEnableChanged = pyqtSignal(bool)
     downloadFolderChanged = pyqtSignal(str)
     minimizeToTrayChanged = pyqtSignal(bool)
+    source_folder_changed_signal = signalBus.sourceFolderChangedSignal
+    target_folder_changed_signal = signalBus.targetFolderChangedSignal
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -152,7 +154,7 @@ class SettingInterface(ScrollArea):
             return
 
         cfg.set(cfg.sourceFolder, folder)
-        self.refreshConfig()
+        self.sourceFolderCard.setContent(cfg.sourceFolder)
 
     def __onTargetFolderCardClicked(self):
         folder = QFileDialog.getExistingDirectory(
@@ -161,26 +163,33 @@ class SettingInterface(ScrollArea):
             return
 
         cfg.set(cfg.targetFolder, folder)
-        self.refreshConfig()
+        self.targetFolderCard.setContent(cfg.targetFolder)
 
     def __connectSignalToSlot(self):
         """ connect signal to slot """
         cfg.appRestartSig.connect(self.__showRestartTooltip)
         cfg.themeChanged.connect(setTheme)
 
+        #signalBus.sourceFolderChangedSignal.connect(self.refreshSourceFolder)
+        #signalBus.targetFolderChangedSignal.connect(self.refreshTargetFolder)
         # music in the pc
         self.sourceFolderCard.clicked.connect(
             self.__onSourceFolderCardClicked)
 
         self.targetFolderCard.clicked.connect(
             self.__onTargetFolderCardClicked)
+        self.sourceFolderCard.clicked.connect(self.source_folder_changed_signal)
+        self.targetFolderCard.clicked.connect(self.target_folder_changed_signal)
 
         # personalization
         self.themeColorCard.colorChanged.connect(setThemeColor)
 
-    def refreshConfigContent(self):
-        self.sourceFolderCard.setContent(cfg.get(cfg.sourceFolder))
-        self.targetFolderCard.setContent(cfg.get(cfg.targetFolder))
+    def refreshSourceFolder(self):
+        self.sourceFolderCard.setContent(cfg.sourceFolder)
+        print('xxx')
 
-    def refreshConfig(self):
-        self._parent.refreshConfig()
+    def refreshTargetFolder(self):
+        self.targetFolderCard.setContent(cfg.get(cfg.targetFolder))
+        print('yyy')
+
+

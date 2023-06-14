@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QEasingCurve
-from PyQt5.QtGui import QIcon, QDesktopServices
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFrame, QWidget, QLabel
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFrame, QWidget
 
 from qfluentwidgets import (NavigationInterface, NavigationItemPosition, PopUpAniStackedWidget, qrouter)
 #from qframelesswindow import FramelessWindow
@@ -19,6 +19,9 @@ from utils.FileFactory import FileFactory
 from ..common.path import LOGO_ICON_PATH
 
 from app.common.config import cfg
+from mxx_config.config import Config as mxxConfig
+from INT.intermediate_config import INTConfig as INTConfig
+from mxx_config.rule_config import RuleConfig as RuleConfig
 
 
 class StackedWidget(QFrame):
@@ -50,7 +53,6 @@ class StackedWidget(QFrame):
 
 class MainWindow(FramelessWindow):
     def __init__(self):
-        #open_word('\"C:\\Users\\77902\\Desktop\\1124.docx\"')
         super().__init__()
         self.setTitleBar(CustomTitleBar(self))
         self.hBoxLayout = QHBoxLayout(self)
@@ -74,11 +76,16 @@ class MainWindow(FramelessWindow):
         self.initWindow()
 
 
-
     def initFile(self):
         root_path = cfg.get(cfg.sourceFolder)
-        print(root_path)
-        self.fileFactory = FileFactory(root_path)
+        mxx_config = mxxConfig('app/mxx_config/mxx_config.json')
+        mxx_item = mxx_config.item('Configs')
+        print(mxx_item)
+        self.INT_url = mxx_item['INT']
+        self.Rule_url = mxx_item['RULE']
+        self.INTConfig = INTConfig(self.INT_url)
+        self.RuleConfig = RuleConfig(self.Rule_url)
+        self.fileFactory = FileFactory(root_path, self.INTConfig, self.RuleConfig)
 
     def initLayout(self):
         self.hBoxLayout.setSpacing(0)
@@ -88,6 +95,7 @@ class MainWindow(FramelessWindow):
         self.hBoxLayout.setStretchFactor(self.widgetLayout, 1)
         self.widgetLayout.addWidget(self.stackWidget)
         self.widgetLayout.setContentsMargins(0, 48, 0, 0)
+
 
         self.navigationInterface.displayModeChanged.connect(self.titleBar.raise_)
         self.titleBar.raise_()
@@ -158,8 +166,3 @@ class MainWindow(FramelessWindow):
     def resizeEvent(self, e):
         self.titleBar.move(46, 0)
         self.titleBar.resize(self.width()-46, self.titleBar.height())
-
-    def refreshConfig(self):
-        self.settingInterface.refreshConfigContent()
-        self.layoutInterface.refreshConfigContent()
-        self.signal1.emit()

@@ -9,6 +9,9 @@ class FileFactory:
         self.files = []
         self.LoadFiles(root_path, [])
 
+    def __init__(self, root_path, INTConfig, RuleConfig):
+        self.root_path = root_path
+
     def LoadFiles(self, path, path_list):
         dir_or_files = os.listdir(path)
         for file_name in dir_or_files:
@@ -34,8 +37,3 @@ class FileFactory:
             ans += '-------------------------------------'
         return ans
 
-
-
-if __name__ == '__main__':
-    factory = FileFactory(r'D:\book')
-    print(factory)

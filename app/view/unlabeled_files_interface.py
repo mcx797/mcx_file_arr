@@ -14,7 +14,6 @@ from app.common.style_sheet import StyleSheet
 from utils.FileFactory import FileFactory
 from utils.FileItem import FileItem
 
-from ..common.trie import Trie
 
 class LineEdit(SearchLineEdit):
     def __init__(self, parent=None):
@@ -25,11 +24,12 @@ class LineEdit(SearchLineEdit):
 
 class FileCard(QFrame):
 
-    clicked = pyqtSignal(FileItem)
+    file_card_clicked_signal = pyqtSignal(FileItem)
 
     def __init__(self, file:FileItem, parent=None):
         super().__init__(parent=parent)
         self.file = file
+        self.name = self.file.Name()
         self.icon = FIF.FOLDER
         self.isSelected = False
         self.nameLabel = QLabel(self)
@@ -46,7 +46,7 @@ class FileCard(QFrame):
     def mouseReleaseEvent(self, e):
         if self.isSelected:
             return
-        self.clicked.emit(self.file)
+        self.file_card_clicked_signal.emit(self.file)
 
     def setSelected(self, isSelected:bool, force=False):
         if isSelected == self.isSelected and not force:
@@ -70,25 +70,15 @@ class MesPanel(QFrame):
         self.frame = TreeFrame(self, False)
         self.vBoxLayout.addWidget(self.frame)
 
-        #self.frame.clear()
-        #self.frame = None
-        #self.vBoxLayout.removeWidget(self.frame)
 
     def setMes(self, file:FileItem):
         self.fileNameLabel.setText(file.Name())
         self.frame.refresh(file)
 
-
-
-
-    def setFile(self):
-        print('setFile in line 38')
-
 class FileCardView(QWidget):
     def __init__(self, parent, fileFactory:FileFactory):
         super().__init__(parent=parent)
         self.fileFactory = fileFactory
-        self.trie = Trie()
         self.fileCardViewLabel = QLabel(self.tr('未分类文件列表'), self)
         self.searchLineEdit = LineEdit(self)
 
@@ -130,14 +120,32 @@ class FileCardView(QWidget):
         self.__setQss()
 
 
-        #self.searchLineEdit.clearSignal.connect(self.showAllFiles)
-        #self.searchLineEdit.searchSignal.connect(self.search)
+        self.searchLineEdit.clearSignal.connect(self.showAllFiles)
+        self.searchLineEdit.searchSignal.connect(self.search)
 
         for item in self.files:
-            print(item)
             self.addCard(item)
 
         self.setSelectedFile(self.files[0])
+
+    def search(self, keyWord:str):
+        self.flowLayout.removeAllWidgets()
+
+        for i, card in enumerate(self.cards):
+            if keyWord in card.name:
+                isVisible = True
+            else:
+                isVisible = False
+            card.setVisible(isVisible)
+            if isVisible:
+                self.flowLayout.addWidget(card)
+
+    def showAllFiles(self):
+        self.flowLayout.removeAllWidgets()
+        for card in self.cards:
+            card.show()
+            self.flowLayout.addWidget(card)
+
 
     def setSelectedFile(self, file:FileItem):
         index = self.fileFactory.files.index(file)
@@ -150,8 +158,7 @@ class FileCardView(QWidget):
 
     def addCard(self, file):
         card = FileCard(file, self)
-        card.clicked.connect(self.setSelectedFile)
-        self.trie.insert(file.Name(), len(self.cards))
+        card.file_card_clicked_signal.connect(self.setSelectedFile)
         self.cards.append(card)
         self.flowLayout.addWidget(card)
 
@@ -208,7 +215,6 @@ class TreeFrame(Frame):
         if len(file.Path()) != 0:
             itemTop = QTreeWidgetItem([self.tr(file.Path()[0])])
             itemTemp = itemTop
-            print(file.Path()[0])
             for i in range(1, len(file.Path())):
                 item1 = QTreeWidgetItem([self.tr(file.Path()[i])])
                 itemTemp.addChild(item1)

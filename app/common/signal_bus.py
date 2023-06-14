@@ -7,6 +7,8 @@ class SignalBus(QObject):
 
     switchToSampleCard = pyqtSignal(str, int)
     supportSignal = pyqtSignal()
+    sourceFolderChangedSignal = pyqtSignal()
+    targetFolderChangedSignal = pyqtSignal()
 
 
 signalBus = SignalBus()
