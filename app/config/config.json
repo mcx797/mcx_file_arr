@@ -14,8 +14,8 @@
         "Target": "D:/pr/30th/img"
     },
     "Configs":{
-        "INT":  "D:\\2023\\Leading\\FileArr\\config\\log_items.json",
-        "RULE": "D:\\2023\\Leading\\FileArr\\config\\identify.json"
+        "INT":  "D:\\2023\\Leading\\FileArr\\INT\\Leading_INT.json",
+        "RULE": "D:\\2023\\Leading\\FileArr\\INT\\Leading_rename_rule.json"
     },
     "QFluentWidgets": {
         "ThemeColor": "#ff009faa",

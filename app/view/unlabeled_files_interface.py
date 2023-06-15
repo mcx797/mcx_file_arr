@@ -13,6 +13,7 @@ from app.common.style_sheet import StyleSheet
 
 from utils.FileFactory import FileFactory
 from utils.FileItem import FileItem
+from app.common.trie import Trie
 
 
 class LineEdit(SearchLineEdit):
@@ -78,6 +79,7 @@ class MesPanel(QFrame):
 class FileCardView(QWidget):
     def __init__(self, parent, fileFactory:FileFactory):
         super().__init__(parent=parent)
+        self.trie = Trie()
         self.fileFactory = fileFactory
         self.fileCardViewLabel = QLabel(self.tr('未分类文件列表'), self)
         self.searchLineEdit = LineEdit(self)
@@ -120,13 +122,26 @@ class FileCardView(QWidget):
         self.__setQss()
 
 
-        self.searchLineEdit.clearSignal.connect(self.showAllFiles)
-        self.searchLineEdit.searchSignal.connect(self.search)
+        self.flowLayout.removeAllWidgets()
+        self.search('')
+
+
 
         for item in self.files:
             self.addCard(item)
 
+
+        #self.showAllFiles()
+        self.searchLineEdit.searchSignal.connect(self.search)
+        self.searchLineEdit.clearSignal.connect(self.showAllFiles)
+        '''
         self.setSelectedFile(self.files[0])
+
+        
+        
+
+        self.showAllFiles()
+        '''
 
     def search(self, keyWord:str):
         self.flowLayout.removeAllWidgets()
@@ -144,8 +159,9 @@ class FileCardView(QWidget):
         self.flowLayout.removeAllWidgets()
         for card in self.cards:
             card.show()
+            card.setVisible(True)
+            card.show()
             self.flowLayout.addWidget(card)
-
 
     def setSelectedFile(self, file:FileItem):
         index = self.fileFactory.files.index(file)
@@ -158,9 +174,11 @@ class FileCardView(QWidget):
 
     def addCard(self, file):
         card = FileCard(file, self)
+        card.setVisible(True)
         card.file_card_clicked_signal.connect(self.setSelectedFile)
-        self.cards.append(card)
         self.flowLayout.addWidget(card)
+        self.cards.append(card)
+
 
     def __setQss(self):
         self.view.setObjectName('fileView')

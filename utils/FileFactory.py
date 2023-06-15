@@ -4,13 +4,12 @@ from utils.FileItem import FileItem
 
 class FileFactory:
     """文件管理器"""
-    def __init__(self, root_path):
+    def __init__(self, root_path, ruleCfg):
         self.root_path = root_path
+        self.ruleCfg = ruleCfg
         self.files = []
         self.LoadFiles(root_path, [])
 
-    def __init__(self, root_path, INTConfig, RuleConfig):
-        self.root_path = root_path
 
     def LoadFiles(self, path, path_list):
         dir_or_files = os.listdir(path)
@@ -21,7 +20,11 @@ class FileFactory:
                 self.LoadFiles(file_path, path_list)
                 path_list.pop(len(path_list) - 1)
             else:
-                new_file = FileItem(path_list.copy(), file_name)
+                if len(file_name) >= 2 and file_name[0:2] == '~$':
+                    continue
+                path_list.append(file_name)
+                new_file = FileItem(path_list.copy(), file_name, self.ruleCfg)
+                path_list.pop(len(path_list) - 1)
                 self.files.append(new_file)
 
     def AllPath(self):

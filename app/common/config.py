@@ -35,6 +35,12 @@ class Config(QConfig):
     targetFolder = ConfigItem(
         "Folders", "Target", "app/download", FolderValidator())
 
+    INTUrl = ConfigItem(
+        "Configs", "INT", "app/download")
+
+    ruleUrl = ConfigItem(
+        "Configs", "RULE", "app/download")
+
     # main window
     dpiScale = OptionsConfigItem(
         "MainWindow", "DpiScale", "Auto", OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]), restart=True)
@@ -60,4 +66,4 @@ SUPPORT_URL = "https://afdian.net/a/zhiyiYo"
 
 
 cfg = Config()
-qconfig.load('app/mxx_config/mxx_config.json', cfg)
+qconfig.load('app/config/config.json', cfg)

@@ -1,0 +1,18 @@
+{
+	
+	"rule_list": [
+		{
+			"target":"ReservoirParaEvaluate_ImageHeaderMes",
+			"rules": [
+				{
+					"type":"in",
+					"content": "图头",
+					"start":"0",
+					"end":"0",
+					"vars":"图头",
+					"suffix":".txt"
+				}
+			]
+		}
+	]
+}

@@ -12,7 +12,7 @@ class Config():
                 self.__config = json.load(f)
         except:
             self._config = {}
-            print('mxx_config/mxx_config.py: no such file or file format wrong')
+            print('mxx_config/config.py: no such file or file format wrong')
             return
         print('load json file {0}'.format(self.__json_addr))
 

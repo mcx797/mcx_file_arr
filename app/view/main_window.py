@@ -21,7 +21,7 @@ from ..common.path import LOGO_ICON_PATH
 from app.common.config import cfg
 from mxx_config.config import Config as mxxConfig
 from INT.intermediate_config import INTConfig as INTConfig
-from mxx_config.rule_config import RuleConfig as RuleConfig
+from INT.rule_config import RuleConfig as RuleConfig
 
 
 class StackedWidget(QFrame):
@@ -78,14 +78,11 @@ class MainWindow(FramelessWindow):
 
     def initFile(self):
         root_path = cfg.get(cfg.sourceFolder)
-        mxx_config = mxxConfig('app/mxx_config/mxx_config.json')
-        mxx_item = mxx_config.item('Configs')
-        print(mxx_item)
-        self.INT_url = mxx_item['INT']
-        self.Rule_url = mxx_item['RULE']
-        self.INTConfig = INTConfig(self.INT_url)
-        self.RuleConfig = RuleConfig(self.Rule_url)
-        self.fileFactory = FileFactory(root_path, self.INTConfig, self.RuleConfig)
+        INT_url = cfg.get(cfg.INTUrl)
+        rule_url = cfg.get(cfg.ruleUrl)
+        self.INT_cfg = INTConfig(INT_url)
+        self.rule_cfg = RuleConfig(rule_url, self.INT_cfg)
+        self.fileFactory = FileFactory(root_path, self.rule_cfg)
 
     def initLayout(self):
         self.hBoxLayout.setSpacing(0)
